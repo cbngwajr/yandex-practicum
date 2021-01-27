@@ -1,0 +1,93 @@
+import pandas as pd #for dealing with dataframes
+from sklearn.linear_model import LinearRegression #to deal with Linear Regression Models
+from sklearn.model_selection import train_test_split #to be able to split datasets
+from sklearn.metrics import mean_squared_error #to be able to calculate model's mean squared error
+from sklearn.model_selection import cross_val_score
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+data_0=pd.read_csv('/datasets/geo_data_0.csv')
+data_1=pd.read_csv('/datasets/geo_data_1.csv')
+data_2=pd.read_csv('/datasets/geo_data_2.csv')
+
+data_0.head()
+
+data_0.info()
+
+data_1.head()
+
+data_1.info()
+
+data_2.head()
+
+data_2.info()
+
+def lr_model(f_train, f_valid, t_train, t_valid):
+    lr = LinearRegression().fit(f_train, t_train)
+    t_pred = lr.predict(f_valid)  
+    rmse=(mean_squared_error(t_valid, t_pred))**0.5
+    return rmse, t_pred
+
+features0=data_0.drop(['id', 'product'], axis=1)
+target0=data_0['product']
+f_train0, f_valid0, t_train0, t_valid0 = train_test_split(features0, target0, test_size=0.25, \
+                                                          random_state=12345)
+rmse0, pred0 = lr_model(f_train0, f_valid0, t_train0, t_valid0)
+print('RMSE:', rmse0, '; Average predicted volume:', pred0.mean())
+
+features1=data_1.drop(['id', 'product'], axis=1)
+target1=data_1['product']
+f_train1, f_valid1, t_train1, t_valid1 = train_test_split(features1, target1, test_size=0.25, \
+                                                          random_state=12345)
+rmse1, pred1 = lr_model(f_train1, f_valid1, t_train1, t_valid1)
+print('RMSE:', rmse1, '; Average predicted volume:', pred1.mean())
+
+features2=data_2.drop(['id', 'product'], axis=1)
+target2=data_2['product']
+f_train2, f_valid2, t_train2, t_valid2 = train_test_split(features2, target2, test_size=0.25, \
+                                                          random_state=12345)
+rmse2, pred2 = lr_model(f_train2, f_valid2, t_train2, t_valid2)
+print('RMSE:', rmse2, '; Average predicted volume:', pred2.mean())
+
+points = 500
+points_needed = 200
+budget_200 = 100_000_000
+income_per_volume = 4500
+max_risk = 0.025
+unit_of_volume = 1000
+no_loss_volume=(budget_200/points_needed) / income_per_volume
+print(no_loss_volume)
+
+pred0 = pd.Series(pred0)
+pred1 = pd.Series(pred1)
+pred2 = pd.Series(pred2)
+data_0['pred'] = pred0
+data_1['pred'] = pred1
+data_2['pred'] = pred2
+
+def revenue(target, predicted, n):
+    indices = predicted.sort_values(ascending=False).index
+    return (target.loc[indices][:n].sum() * income_per_volume) - budget_200
+
+state = np.random.RandomState(12345)
+def rev_bootstr(target, predictions):
+    values = []
+    target = pd.Series(target)
+    predictions = pd.Series(predictions)
+    for i in range(1000):
+        target_sample = target.sample(n=points, replace=True, random_state=state)
+        pred_sample=predictions.loc[target_sample.index]
+        values.append(revenue(target_sample, pred_sample, points_needed))
+    return pd.Series(values)
+
+revenues0 = rev_bootstr(t_valid0, pred0)
+revenues1 = rev_bootstr(t_valid1, pred1)
+revenues2 = rev_bootstr(t_valid2, pred2)
+
+sns.distplot(revenues0)
+sns.distplot(revenues1)
+sns.distplot(revenues2)
+plt.legend()
+
+len(revenues1[revenues1<0])/len(revenues1)
