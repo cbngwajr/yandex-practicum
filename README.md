@@ -1,3 +1,2 @@
-# Practicum by Yandex Projects
-These are Data Science projects I completed when going through the Data Science training course in Practicum by Yandex
-They involve Data Preprocessing, Analysis and Visualization, Statistical Analysis, Machine Learning, Machine Learning for texts, Time Series, Computer Vision, etc
+# Machine Learning for Texts
+The Film Junky Union, a new edgy community for classic movie enthusiasts, is developing a system for filtering and categorizing movie reviews. The goal is to train a model to automatically detect negative reviews. You'll be using a dataset of IMBD movie reviews with polarity labelling to build a model for classifying positive and negative reviews. It will need to reach an F1 score of at least 0.85.
