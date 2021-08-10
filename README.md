@@ -12,6 +12,8 @@
 - total_income: monthly income
 - purpose: reason for taking out a loan
 
-Goal: Utilizing different metrics to determine the likelihood that a customer defaults on a loan
+# Goal
+Utilizing different metrics to determine the likelihood that a customer defaults on a loan
 
-Libraries: pandas, ntlk
+# Libraries
+*pandas, ntlk*
