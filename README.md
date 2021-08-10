@@ -12,9 +12,9 @@
 - date_posted — the date the ad was published
 - days_listed — from publication to removal
 
-#Goal
+# Goal
 Studying vehicle ads to determine what factors influence vehicle price
 
-#Libraries
+# Libraries
 *pandas, matplotlib, numpy*
 
