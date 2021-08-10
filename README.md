@@ -8,5 +8,5 @@ Picture files: (folder containing jpg)
 Training and evaluating a model to automatically detect the age of a customer at a checkout counter
 
 # Libraries
-pandas, numpy, matplotlib, seaborn, tensorflow
+*pandas, numpy, matplotlib, seaborn, tensorflow*
 
